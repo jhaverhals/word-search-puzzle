@@ -1,0 +1,35 @@
+{
+  "name": "word-search-puzzle",
+  "version": "0.0.1",
+  "description": "Word Search puzzle",
+  "keywords": [
+    "puzzle",
+    "wordsearch"
+  ],
+  "author": "Johan Haverhals",
+  "type": "module",
+  "engines": {
+    "node": ">=14.0",
+    "npm": ">=6.0"
+  },
+  "scripts": {
+    "build": "tsc",
+    "build:watch": "tsc --watch",
+    "format": "prettier src/**/*.ts --write",
+    "test": "web-test-runner",
+    "test:watch": "web-test-runner --watch"
+  },
+  "devDependencies": {
+    "@types/chai": "4.1.3",
+    "@types/mocha": "5.2.7",
+    "@web/dev-server": "0.1.5",
+    "@web/dev-server-esbuild": "0.2.11",
+    "@web/test-runner": "0.12.10",
+    "@web/test-runner-junit-reporter": "0.4.0",
+    "@esm-bundle/chai": "4.3.0",
+    "eslint": "7.19.0",
+    "mocha": "8.2.1",
+    "prettier": "2.2.1",
+    "typescript": "^4.1.3"
+  }
+}

@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Word Search Puzzle</title>
+    <link rel="stylesheet" href="default.css"/>
+    <script type="module" src="./src/Puzzle.ts"></script>
+  </head>
+  <body>
+    <h1>Word Search puzzel</h1>
+    Provide your words here:<br/>
+    <textarea></textarea>
+
+    <script>
+      puzzle = new Puzzle().addWord('test')
+                     .addWord('computer')
+                     .addWord('laptop');
+    </script>
+  </body>
+</html>
