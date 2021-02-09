@@ -16,6 +16,7 @@
     "build": "tsc",
     "build:watch": "tsc --watch",
     "format": "prettier src/**/*.ts --write",
+    "serve": "web-dev-server --node-resolve --watch",
     "test": "web-test-runner",
     "test:watch": "web-test-runner --watch"
   },
