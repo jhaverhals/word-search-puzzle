@@ -15,6 +15,7 @@
   "scripts": {
     "build": "tsc",
     "build:watch": "tsc --watch",
+    "clean": "rimraf lib test-results",
     "format": "prettier src/**/*.ts --write",
     "serve": "web-dev-server --node-resolve --watch",
     "test": "web-test-runner",
@@ -31,6 +32,7 @@
     "eslint": "7.19.0",
     "mocha": "8.2.1",
     "prettier": "2.2.1",
+    "rimraf": "3.0.2",
     "typescript": "^4.1.3"
   }
 }

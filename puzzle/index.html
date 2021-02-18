@@ -2,18 +2,28 @@
 <html>
   <head>
     <title>Word Search Puzzle</title>
-    <link rel="stylesheet" href="default.css"/>
-    <script type="module" src="./src/Puzzle.ts"></script>
+    <link rel="stylesheet" href="../puzzle/default.css"/>
   </head>
   <body>
     <h1>Word Search puzzel</h1>
     Provide your words here:<br/>
     <textarea></textarea>
 
-    <script>
-      puzzle = new Puzzle().addWord('test')
-                     .addWord('computer')
-                     .addWord('laptop');
+    <h3>Found words:</h3>
+    <div id="wordList"></div>
+
+    <script type="module">
+      import {WordSearchPuzzle} from '../lib/word-search-puzzle.js';
+      const puzzle = new WordSearchPuzzle();
+      puzzle.addWord('hello') // top down
+            .addWord('world') // down top
+            .addWord('clear') // left right
+            .addWord('milk')  // right left
+            .addWord('tilt')  // down-right top-left
+            .addWord('let')   // down-left top-right
+            .addWord('silk')  // top-right down-left
+            .addWord('bee');  // top-left top-right
+      puzzle.solve();
     </script>
   </body>
 </html>
