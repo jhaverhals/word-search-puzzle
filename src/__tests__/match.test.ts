@@ -14,6 +14,13 @@ describe('Matches functionality', function () {
   });
   it('Add via both constructor and add()', () => {
     expect(new Match([new Position().set(1, 2)]).add(new Position().set(1, 2)).length()).to.equal(2);
-    expect(new Match([new Position().set(1, 2), new Position().set(1, 2)]).add(new Position().set(1, 2)).length()).to.equal(3);
+    expect(
+      new Match([new Position().set(1, 2), new Position().set(1, 2)]).add(new Position().set(1, 2)).length()
+    ).to.equal(3);
+  });
+  it('exists()', () => {
+    expect(new Match().exists()).to.equal(false);
+    expect(new Match([new Position().set(1, 2)]).exists()).to.equal(true);
+    expect(new Match([new Position().set(1, 2), new Position().set(1, 3)]).exists()).to.equal(true);
   });
 });

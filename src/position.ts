@@ -9,6 +9,6 @@ export class Position {
   }
 
   exists(): boolean {
-    return this.row && this.column ? true : false;
+    return this.row != undefined && this.row >= 0 && this.column != undefined && this.column >= 0 ? true : false;
   }
 }

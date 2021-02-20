@@ -21,4 +21,8 @@ export class Match {
     if (this.letters) return this.letters.length;
     else return 0;
   }
+
+  exists(): boolean {
+    return this.length() > 0 ? true : false;
+  }
 }

@@ -70,12 +70,18 @@ export class WordSearchPuzzle {
     }
   }
 
-  searchWord(word: string, directions: Direction[]) {
-
+  searchWord(word: string, directions: Direction[]): Match {
+    const match = new Match();
+    const letters = word.split('').reverse();
+    const firstLetter = this.findFirstLetter(letters.pop());
+    if (firstLetter.exists()) {
+      match.add(firstLetter);
+    }
+    return match;
   }
 
   solve() {
-    this.wordList.forEach(word => {
+    this.wordList.forEach((word) => {
       console.log(word);
 
       // this.searchWord(word, [Direction.LtR, Direction.TopDown]);

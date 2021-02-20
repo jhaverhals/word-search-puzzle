@@ -175,3 +175,12 @@ describe('findNextLetter() left-to-right', function () {
     );
   });
 });
+
+describe('searchWord()', function () {
+  it('first letter not found', () => {
+    expect(puzzle5x5.searchWord('qlear', [Direction.LtR]).exists()).to.equal(false);
+  });
+  it('first letter found', () => {
+    expect(puzzle5x5.searchWord('clear', [Direction.LtR]).exists()).to.equal(true);
+  });
+});
