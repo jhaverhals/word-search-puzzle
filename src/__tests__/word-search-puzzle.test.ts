@@ -144,34 +144,34 @@ puzzle5x5
 
 describe('findFirstLetter()', function () {
   it('Letter in first row', () => {
-    expect(puzzle5x5.findFirstLetter('E')).to.deep.equal(new Position(0, 2));
-    expect(puzzle5x5.findFirstLetter('e')).to.deep.equal(new Position(0, 2));
-    expect(puzzle5x5.findFirstLetter('E')).to.not.deep.equal(new Position(0, 1));
+    expect(puzzle5x5.findFirstLetter('E')).to.deep.equal(new Position().set(0, 2));
+    expect(puzzle5x5.findFirstLetter('e')).to.deep.equal(new Position().set(0, 2));
+    expect(puzzle5x5.findFirstLetter('E')).to.not.deep.equal(new Position().set(0, 1));
   });
   it('Letter in second row', () => {
-    expect(puzzle5x5.findFirstLetter('T')).to.deep.equal(new Position(1, 0));
-    expect(puzzle5x5.findFirstLetter('t')).to.deep.equal(new Position(1, 0));
-    expect(puzzle5x5.findFirstLetter('T')).to.not.deep.equal(new Position(1, 3));
+    expect(puzzle5x5.findFirstLetter('T')).to.deep.equal(new Position().set(1, 0));
+    expect(puzzle5x5.findFirstLetter('t')).to.deep.equal(new Position().set(1, 0));
+    expect(puzzle5x5.findFirstLetter('T')).to.not.deep.equal(new Position().set(1, 3));
   });
   it('Letter in fith/last row', () => {
-    expect(puzzle5x5.findFirstLetter('W')).to.deep.equal(new Position(4, 4));
+    expect(puzzle5x5.findFirstLetter('W')).to.deep.equal(new Position().set(4, 4));
   });
   it('Letter not exists in grid', () => {
-    expect(puzzle5x5.findFirstLetter('Q')).to.equal(undefined);
-    expect(puzzle5x5.findFirstLetter('Q')).to.not.deep.equal(new Position(0, 0));
-    expect(puzzle5x5.findFirstLetter('Q')).to.not.deep.equal(new Position(4, 4));
+    expect(puzzle5x5.findFirstLetter('Q')).to.deep.equal(new Position());
+    expect(puzzle5x5.findFirstLetter('Q')).to.not.deep.equal(new Position().set(0, 0));
+    expect(puzzle5x5.findFirstLetter('Q')).to.not.deep.equal(new Position().set(4, 4));
   });
 });
 
 describe('findNextLetter() left-to-right', function () {
   it('all letters found', () => {
-    expect(() => puzzle5x5.findNextLetter('C', new Match([new Position(2, 0)]), Direction.LtR)).to.throw(
+    expect(() => puzzle5x5.findNextLetter('C', new Match([new Position().set(2, 0)]), Direction.LtR)).to.throw(
       'Given word already found'
     );
   });
   it('second Letter', () => {
-    expect(puzzle5x5.findNextLetter('clear', new Match([new Position(2, 0)]), Direction.LtR)).to.deep.equal(
-      new Match([new Position(2, 0), new Position(2, 1)])
+    expect(puzzle5x5.findNextLetter('clear', new Match([new Position().set(2, 0)]), Direction.LtR)).to.deep.equal(
+      new Match([new Position().set(2, 0), new Position().set(2, 1)])
     );
   });
 });

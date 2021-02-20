@@ -49,14 +49,14 @@ export class WordSearchPuzzle {
     return letterArray;
   }
 
-  findFirstLetter(letter: string): Position | undefined {
+  findFirstLetter(letter: string): Position {
     letter = letter.toUpperCase();
     for (var row = 0; row < this.grid.length; row++) {
       for (var column = 0; column < this.grid[row].length; column++) {
-        if (this.grid[row][column] == letter) return new Position(row, column);
+        if (this.grid[row][column] == letter) return new Position().set(row, column);
       }
     }
-    return undefined;
+    return new Position();
   }
 
   findNextLetter(word: string, match: Match, direction: Direction): Match {
@@ -66,11 +66,19 @@ export class WordSearchPuzzle {
 
       //TODO logic like if end of grid reached in given direction (based on last match)
 
-      return match.add(new Position(2, 1));
+      return match.add(new Position().set(2, 1));
     }
   }
 
+  searchWord(word: string, directions: Direction[]) {
+
+  }
+
   solve() {
-    this.wordList.forEach((word) => console.log(word));
+    this.wordList.forEach(word => {
+      console.log(word);
+
+      // this.searchWord(word, [Direction.LtR, Direction.TopDown]);
+    });
   }
 }
