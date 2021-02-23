@@ -63,7 +63,7 @@ export class WordSearchPuzzle {
     if (match.length() == word.length) {
       throw new Error('Given word already found');
     } else {
-
+      
       //TODO logic like if end of grid reached in given direction (based on last match)
 
       return match.add(new Position().set(2, 1));
@@ -78,6 +78,63 @@ export class WordSearchPuzzle {
       match.add(firstLetter);
     }
     return match;
+  }
+
+  getNextCell(offset: Position, direction: Direction): Position {
+    let shiftRow = 0;
+    let shiftColumn = 0;
+
+    switch (direction) {
+      case Direction.LtR:
+        shiftRow = 0;
+        shiftColumn = 1;
+        break;
+      case Direction.RtL:
+        shiftRow = 0;
+        shiftColumn = -1;
+        break;
+      case Direction.TopDown:
+        shiftRow = 1;
+        shiftColumn = 0;
+        break;
+      case Direction.BottumUp:
+        shiftRow = -1;
+        shiftColumn = 0;
+        break;
+      case Direction.TopLBottomR:
+        shiftRow = 1;
+        shiftColumn = 1;
+        break;
+      case Direction.BottomRTopL:
+        shiftRow = -1;
+        shiftColumn = -1;
+        break;
+      case Direction.BottomLTopR:
+        shiftRow = 1;
+        shiftColumn = -1;
+        break;
+      case Direction.TopRBottomL:
+        shiftRow = -1;
+        shiftColumn = 1;
+        break;
+      default:
+        throw new Error('Unsupported direction: ' + direction);
+    }
+
+    if (
+      offset.row >= 0 &&
+      offset.row < this.gridRows &&
+      offset.row + shiftRow >= 0 &&
+      offset.row + shiftRow < this.gridRows &&
+      offset.column >= 0 &&
+      offset.column < this.gridCols &&
+      offset.column + shiftColumn >= 0 &&
+      offset.column + shiftColumn < this.gridCols
+    ) {
+      return new Position().set(offset.row + shiftRow, offset.column + shiftColumn);
+    } else {
+      return new Position();
+    }
   }
 
   solve() {
