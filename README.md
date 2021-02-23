@@ -1,4 +1,4 @@
-![CI](https://github.com/jhaverhals/word-search-puzzle/actions/workflows/main.yml/badge.svg)
+[![CI](https://github.com/jhaverhals/word-search-puzzle/actions/workflows/main.yml/badge.svg)](https://github.com/jhaverhals/word-search-puzzle/actions/workflows/main.yml)
 
 # Word Search Puzzle
 
