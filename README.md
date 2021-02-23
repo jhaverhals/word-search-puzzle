@@ -1,3 +1,5 @@
+![CI](https://github.com/jhaverhals/word-search-puzzle/actions/workflows/main.yml/badge.svg)
+
 # Word Search Puzzle
 
 Word search (woordzoeker in NL) puzzle check functionality
