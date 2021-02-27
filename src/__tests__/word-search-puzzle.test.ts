@@ -1,6 +1,6 @@
 import {expect} from '@esm-bundle/chai';
 import {Direction} from '../direction';
-import {Match} from '../match';
+import {SearchResult} from '../search-result';
 import {Position} from '../position';
 import {WordSearchPuzzle} from '../word-search-puzzle';
 
@@ -16,78 +16,6 @@ describe('Word list functionality', function () {
   });
   it('Puzzle has 2 words in list', () => {
     expect(new WordSearchPuzzle().addWord('test').addWord('test').wordCount()).to.equal(2);
-  });
-});
-
-describe('gridRowContainsOnlySingleLetters()', function () {
-  it('no or empty cell', () => {
-    expect(new WordSearchPuzzle().cellsOfgridRowContainsOnlySingleLetters([])).to.equal(false);
-    expect(new WordSearchPuzzle().cellsOfgridRowContainsOnlySingleLetters([''])).to.equal(false);
-  });
-  it('single alphabetic Letter', () => {
-    expect(new WordSearchPuzzle().cellsOfgridRowContainsOnlySingleLetters(['a'])).to.equal(true);
-    expect(new WordSearchPuzzle().cellsOfgridRowContainsOnlySingleLetters(['A'])).to.equal(true);
-  });
-  it('single alphabetic Letter + empty cell', () => {
-    expect(new WordSearchPuzzle().cellsOfgridRowContainsOnlySingleLetters(['A', ''])).to.equal(false);
-  });
-  it('double alphabetic Letters in single cell', () => {
-    expect(new WordSearchPuzzle().cellsOfgridRowContainsOnlySingleLetters(['AA'])).to.equal(false);
-    expect(new WordSearchPuzzle().cellsOfgridRowContainsOnlySingleLetters(['AA', 'B'])).to.equal(false);
-    expect(new WordSearchPuzzle().cellsOfgridRowContainsOnlySingleLetters(['A', 'BB'])).to.equal(false);
-  });
-  it('single alphabetic Letter + double alphabetic Letters in single cell', () => {
-    expect(new WordSearchPuzzle().cellsOfgridRowContainsOnlySingleLetters(['A', 'BB'])).to.equal(false);
-  });
-  it('single non alphabetic Letter', () => {
-    expect(new WordSearchPuzzle().cellsOfgridRowContainsOnlySingleLetters(['2'])).to.equal(false);
-    expect(new WordSearchPuzzle().cellsOfgridRowContainsOnlySingleLetters(['22'])).to.equal(false);
-    expect(new WordSearchPuzzle().cellsOfgridRowContainsOnlySingleLetters(['-'])).to.equal(false);
-    expect(new WordSearchPuzzle().cellsOfgridRowContainsOnlySingleLetters(['#'])).to.equal(false);
-    expect(new WordSearchPuzzle().cellsOfgridRowContainsOnlySingleLetters(['%'])).to.equal(false);
-    expect(new WordSearchPuzzle().cellsOfgridRowContainsOnlySingleLetters(['\\'])).to.equal(false);
-    expect(new WordSearchPuzzle().cellsOfgridRowContainsOnlySingleLetters(['/'])).to.equal(false);
-    expect(new WordSearchPuzzle().cellsOfgridRowContainsOnlySingleLetters(['`'])).to.equal(false);
-    expect(new WordSearchPuzzle().cellsOfgridRowContainsOnlySingleLetters(['.'])).to.equal(false);
-    expect(new WordSearchPuzzle().cellsOfgridRowContainsOnlySingleLetters(['?'])).to.equal(false);
-    expect(new WordSearchPuzzle().cellsOfgridRowContainsOnlySingleLetters(['€'])).to.equal(false);
-    expect(new WordSearchPuzzle().cellsOfgridRowContainsOnlySingleLetters(['$'])).to.equal(false);
-  });
-});
-
-describe('Grid initialization 1x1', function () {
-  it('empty grid row not allowed', () => {
-    const puzzle1x1 = new WordSearchPuzzle().createGrid(1, 1);
-    expect(() => puzzle1x1.addGridRow([])).to.throw('Amount of letters does not match the grid column size.');
-  });
-  it('grid row with too much columns is not allowed', () => {
-    const puzzle1x1 = new WordSearchPuzzle().createGrid(1, 1);
-    expect(() => puzzle1x1.addGridRow(['A', 'B'])).to.throw('Amount of letters does not match the grid column size.');
-  });
-  it('add more rows to go beyond grid size', () => {
-    const puzzle1x1 = new WordSearchPuzzle().createGrid(1, 1).addGridRow(['A']);
-    expect(() => puzzle1x1.addGridRow(['B'])).to.throw('Maximum allowed grid rows reached.');
-  });
-});
-
-describe('Grid initialization 2x2', function () {
-  it('empty grid row not allowed', () => {
-    const puzzle2x2 = new WordSearchPuzzle().createGrid(2, 2);
-    expect(() => puzzle2x2.addGridRow([])).to.throw('Amount of letters does not match the grid column size.');
-  });
-  it('grid row with too less columns is not allowed', () => {
-    const puzzle2x2 = new WordSearchPuzzle().createGrid(2, 2);
-    expect(() => puzzle2x2.addGridRow(['A'])).to.throw('Amount of letters does not match the grid column size.');
-  });
-  it('grid row with too much columns is not allowed', () => {
-    const puzzle2x2 = new WordSearchPuzzle().createGrid(2, 2);
-    expect(() => puzzle2x2.addGridRow(['A', 'B', 'C'])).to.throw(
-      'Amount of letters does not match the grid column size.'
-    );
-  });
-  it('add more rows to go beyond grid size', () => {
-    const puzzle2x2 = new WordSearchPuzzle().createGrid(2, 2).addGridRow(['A', 'B']).addGridRow(['C', 'D']);
-    expect(() => puzzle2x2.addGridRow(['A', 'B'])).to.throw('Maximum allowed grid rows reached.');
   });
 });
 
@@ -153,7 +81,7 @@ describe('findFirstLetter()', function () {
     expect(puzzle5x5.findFirstLetter('t')).to.deep.equal(new Position().set(1, 0));
     expect(puzzle5x5.findFirstLetter('T')).to.not.deep.equal(new Position().set(1, 3));
   });
-  it('Letter in fith/last row', () => {
+  it('Letter in fifth/last row', () => {
     expect(puzzle5x5.findFirstLetter('W')).to.deep.equal(new Position().set(4, 4));
   });
   it('Letter not exists in grid', () => {
@@ -161,136 +89,36 @@ describe('findFirstLetter()', function () {
     expect(puzzle5x5.findFirstLetter('Q')).to.not.deep.equal(new Position().set(0, 0));
     expect(puzzle5x5.findFirstLetter('Q')).to.not.deep.equal(new Position().set(4, 4));
   });
+
+  it('Second letter returned due to offset', () => {
+    expect(puzzle5x5.findFirstLetter('E', new Position().set(0, 2))).to.not.deep.equal(new Position().set(0, 2));
+    expect(puzzle5x5.findFirstLetter('E', new Position().set(0, 2))).to.not.deep.equal(new Position().set(1, 0));
+    expect(puzzle5x5.findFirstLetter('E', new Position().set(0, 2))).to.deep.equal(new Position().set(1, 1));
+  });
 });
 
 describe('findNextLetter() left-to-right', function () {
+  const word1 = 'C';
+  const word2 = 'clear';
+  const direction = Direction.RtL;
+
   it('all letters found', () => {
-    expect(() => puzzle5x5.findNextLetter('C', new Match([new Position().set(2, 0)]), Direction.LtR)).to.throw(
-      'Given word already found'
-    );
+    expect(() =>
+      puzzle5x5.findNextLetter(word1, new SearchResult(word1, direction, [new Position().set(2, 0)]), Direction.LtR)
+    ).to.throw('Given word already found');
   });
   it('second Letter', () => {
-    expect(puzzle5x5.findNextLetter('clear', new Match([new Position().set(2, 0)]), Direction.LtR)).to.deep.equal(
-      new Match([new Position().set(2, 0), new Position().set(2, 1)])
-    );
-  });
-});
-
-describe('getNextCell()', function () {
-  it('direction: Left to Right - valid', () => {
-    expect(puzzle5x5.getNextCell(new Position().set(0, 0), Direction.LtR)).to.deep.equal(new Position().set(0, 1));
-    expect(puzzle5x5.getNextCell(new Position().set(1, 1), Direction.LtR)).to.deep.equal(new Position().set(1, 2));
-  });
-  it('direction: Left to Right - invalid', () => {
-    expect(puzzle5x5.getNextCell(new Position().set(-1, 2), Direction.LtR)).to.deep.equal(new Position());
-    expect(puzzle5x5.getNextCell(new Position().set(0, 4), Direction.LtR)).to.deep.equal(new Position());
-    expect(puzzle5x5.getNextCell(new Position().set(4, 4), Direction.LtR)).to.deep.equal(new Position());
-    expect(puzzle5x5.getNextCell(new Position().set(5, 4), Direction.LtR)).to.deep.equal(new Position());
-  });
-
-  it('direction: Right to Left - valid', () => {
-    expect(puzzle5x5.getNextCell(new Position().set(0, 1), Direction.RtL)).to.deep.equal(new Position().set(0, 0));
-    expect(puzzle5x5.getNextCell(new Position().set(4, 4), Direction.RtL)).to.deep.equal(new Position().set(4, 3));
-  });
-  it('direction: Right to Left - invalid', () => {
-    expect(puzzle5x5.getNextCell(new Position().set(-1, 2), Direction.RtL)).to.deep.equal(new Position());
-    expect(puzzle5x5.getNextCell(new Position().set(0, 0), Direction.RtL)).to.deep.equal(new Position());
-    expect(puzzle5x5.getNextCell(new Position().set(4, 0), Direction.RtL)).to.deep.equal(new Position());
-    expect(puzzle5x5.getNextCell(new Position().set(5, 0), Direction.RtL)).to.deep.equal(new Position());
-  });
-
-  it('direction: Top Down - valid', () => {
-    expect(puzzle5x5.getNextCell(new Position().set(0, 1), Direction.TopDown)).to.deep.equal(new Position().set(1, 1));
-    expect(puzzle5x5.getNextCell(new Position().set(3, 4), Direction.TopDown)).to.deep.equal(new Position().set(4, 4));
-  });
-  it('direction: Top Down - invalid', () => {
-    expect(puzzle5x5.getNextCell(new Position().set(-2, 1), Direction.TopDown)).to.deep.equal(new Position());
-    expect(puzzle5x5.getNextCell(new Position().set(4, 1), Direction.TopDown)).to.deep.equal(new Position());
-    expect(puzzle5x5.getNextCell(new Position().set(4, 4), Direction.TopDown)).to.deep.equal(new Position());
-    expect(puzzle5x5.getNextCell(new Position().set(5, 2), Direction.TopDown)).to.deep.equal(new Position());
-  });
-
-  it('direction: Bottom Up - valid', () => {
-    expect(puzzle5x5.getNextCell(new Position().set(1, 2), Direction.BottumUp)).to.deep.equal(new Position().set(0, 2));
-    expect(puzzle5x5.getNextCell(new Position().set(3, 4), Direction.BottumUp)).to.deep.equal(new Position().set(2, 4));
-  });
-  it('direction: Bottom Up - invalid', () => {
-    expect(puzzle5x5.getNextCell(new Position().set(-2, 1), Direction.BottumUp)).to.deep.equal(new Position());
-    expect(puzzle5x5.getNextCell(new Position().set(0, 1), Direction.BottumUp)).to.deep.equal(new Position());
-    expect(puzzle5x5.getNextCell(new Position().set(5, 4), Direction.BottumUp)).to.deep.equal(new Position());
-    expect(puzzle5x5.getNextCell(new Position().set(5, 2), Direction.BottumUp)).to.deep.equal(new Position());
-  });
-
-  it('direction: TopLeft BottomRight - valid', () => {
-    expect(puzzle5x5.getNextCell(new Position().set(0, 0), Direction.TopLBottomR)).to.deep.equal(
-      new Position().set(1, 1)
-    );
-    expect(puzzle5x5.getNextCell(new Position().set(2, 3), Direction.TopLBottomR)).to.deep.equal(
-      new Position().set(3, 4)
-    );
-  });
-  it('direction: TopLeft BottomRight - invalid', () => {
-    expect(puzzle5x5.getNextCell(new Position().set(-2, 1), Direction.TopLBottomR)).to.deep.equal(new Position());
-    expect(puzzle5x5.getNextCell(new Position().set(4, 1), Direction.TopLBottomR)).to.deep.equal(new Position());
-    expect(puzzle5x5.getNextCell(new Position().set(3, 4), Direction.TopLBottomR)).to.deep.equal(new Position());
-    expect(puzzle5x5.getNextCell(new Position().set(5, 2), Direction.TopLBottomR)).to.deep.equal(new Position());
-  });
-
-  it('direction: BottomRight TopLeft - valid', () => {
-    expect(puzzle5x5.getNextCell(new Position().set(4, 4), Direction.BottomRTopL)).to.deep.equal(
-      new Position().set(3, 3)
-    );
-    expect(puzzle5x5.getNextCell(new Position().set(2, 3), Direction.BottomRTopL)).to.deep.equal(
-      new Position().set(1, 2)
-    );
-  });
-  it('direction: BottomRight TopLeft - invalid', () => {
-    expect(puzzle5x5.getNextCell(new Position().set(-2, 1), Direction.BottomRTopL)).to.deep.equal(new Position());
-    expect(puzzle5x5.getNextCell(new Position().set(0, 1), Direction.BottomRTopL)).to.deep.equal(new Position());
-    expect(puzzle5x5.getNextCell(new Position().set(1, 0), Direction.BottomRTopL)).to.deep.equal(new Position());
-    expect(puzzle5x5.getNextCell(new Position().set(5, 2), Direction.BottomRTopL)).to.deep.equal(new Position());
-  });
-
-  it('direction: BottomLeft TopRight - valid', () => {
-    expect(puzzle5x5.getNextCell(new Position().set(0, 4), Direction.BottomLTopR)).to.deep.equal(
-      new Position().set(1, 3)
-    );
-    expect(puzzle5x5.getNextCell(new Position().set(2, 3), Direction.BottomLTopR)).to.deep.equal(
-      new Position().set(3, 2)
-    );
-  });
-  it('direction: BottomLeft TopRight - invalid', () => {
-    expect(puzzle5x5.getNextCell(new Position().set(-2, 1), Direction.BottomLTopR)).to.deep.equal(new Position());
-    expect(puzzle5x5.getNextCell(new Position().set(1, 0), Direction.BottomLTopR)).to.deep.equal(new Position());
-    expect(puzzle5x5.getNextCell(new Position().set(4, 0), Direction.BottomLTopR)).to.deep.equal(new Position());
-    expect(puzzle5x5.getNextCell(new Position().set(5, 2), Direction.BottomLTopR)).to.deep.equal(new Position());
-  });
-
-  it('direction: TopRight BottomLeft - valid', () => {
-    expect(puzzle5x5.getNextCell(new Position().set(3, 2), Direction.TopRBottomL)).to.deep.equal(
-      new Position().set(2, 3)
-    );
-    expect(puzzle5x5.getNextCell(new Position().set(4, 0), Direction.TopRBottomL)).to.deep.equal(
-      new Position().set(3, 1)
-    );
-  });
-  it('direction: TopRight BottomLeft - invalid', () => {
-    expect(puzzle5x5.getNextCell(new Position().set(-2, 1), Direction.TopRBottomL)).to.deep.equal(new Position());
-    expect(puzzle5x5.getNextCell(new Position().set(1, 4), Direction.TopRBottomL)).to.deep.equal(new Position());
-    expect(puzzle5x5.getNextCell(new Position().set(4, 4), Direction.TopRBottomL)).to.deep.equal(new Position());
-    expect(puzzle5x5.getNextCell(new Position().set(5, 2), Direction.TopRBottomL)).to.deep.equal(new Position());
-  });
-
-  it('empty offset', () => {
-    expect(puzzle5x5.getNextCell(new Position(), Direction.LtR)).to.deep.equal(new Position());
+    expect(
+      puzzle5x5.findNextLetter(word2, new SearchResult(word2, direction, [new Position().set(2, 0)]), direction)
+    ).to.deep.equal(new SearchResult(word2, direction, [new Position().set(2, 0), new Position().set(2, 1)]));
   });
 });
 
 describe('searchWord()', function () {
   it('first letter not found', () => {
-    expect(puzzle5x5.searchWord('qlear', [Direction.LtR]).exists()).to.equal(false);
+    expect(puzzle5x5.searchWord('qlear', [Direction.LtR]).some((result) => result.isFound())).to.equal(false);
   });
-  it('first letter found', () => {
-    expect(puzzle5x5.searchWord('clear', [Direction.LtR]).exists()).to.equal(true);
-  });
+  // it('word found', () => {
+  //   expect(puzzle5x5.searchWord('clear', [Direction.LtR]).some((result) => result.isFound())).to.equal(true);
+  // });
 });

@@ -1,45 +1,29 @@
 import {Direction} from './direction';
-import {Match} from './match';
+import {SearchResult} from './search-result';
 import {Position} from './position';
+import {Grid} from './grid';
 
 export class WordSearchPuzzle {
-  private wordList = [];
-  private grid = [];
-  private gridRows = 0;
-  private gridCols = 0;
+  private _wordList = [];
+  private _grid: Grid;
 
   addWord(newWord: string): WordSearchPuzzle {
-    this.wordList.push(newWord);
+    this._wordList.push(newWord);
     return this;
   }
 
   wordCount(): number {
-    return this.wordList.length;
+    return this._wordList.length;
   }
 
   createGrid(rows: number, columns: number): WordSearchPuzzle {
-    this.gridRows = rows;
-    this.gridCols = columns;
+    this._grid = new Grid(rows, columns);
     return this;
   }
 
   addGridRow(letterArray: string[]): WordSearchPuzzle {
-    if (this.grid.length == this.gridRows) {
-      throw new Error('Maximum allowed grid rows reached.');
-    } else if (letterArray.length != this.gridCols) {
-      throw new Error('Amount of letters does not match the grid column size.');
-    } else if (!this.cellsOfgridRowContainsOnlySingleLetters(letterArray)) {
-      throw new Error('Each cell must contain only one alphabetic character (a-z A-Z)');
-    } else this.grid.push(this.toUppercase(letterArray));
-
+    this._grid.addRow(this.toUppercase(letterArray));
     return this;
-  }
-
-  cellsOfgridRowContainsOnlySingleLetters(letterArray: string[]): boolean {
-    for (var i = 0; i < letterArray.length; i++) {
-      if (!/^[a-zA-Z]$/.test(letterArray[i])) return false;
-    }
-    return letterArray.length > 0;
   }
 
   toUppercase(letterArray: string[]): string[] {
@@ -49,96 +33,71 @@ export class WordSearchPuzzle {
     return letterArray;
   }
 
-  findFirstLetter(letter: string): Position {
-    letter = letter.toUpperCase();
-    for (var row = 0; row < this.grid.length; row++) {
-      for (var column = 0; column < this.grid[row].length; column++) {
-        if (this.grid[row][column] == letter) return new Position().set(row, column);
-      }
+  findFirstLetter(letter: string, lastHit?: Position): Position {
+    let rowOffset = 0;
+    let columnOffset = 0;
+
+    if (lastHit && lastHit.exists()) {
+      const offset = this._grid.getOffset(lastHit);
+      rowOffset = offset.row;
+      columnOffset = offset.column;
     }
-    return new Position();
+
+    let notYetFound = true;
+    const position = new Position();
+    letter = letter.toUpperCase();
+
+    for (var row = rowOffset; row < this._grid.rows && notYetFound; row++) {
+      for (var column = columnOffset; column < this._grid.columns && notYetFound; column++) {
+        if (this._grid.getAt(row, column) == letter) {
+          position.set(row, column);
+          notYetFound = false;
+        }
+      }
+      // reset column offset when moving to next row
+      columnOffset = 0;
+    }
+    return position;
   }
 
-  findNextLetter(word: string, match: Match, direction: Direction): Match {
-    if (match.length() == word.length) {
+  findNextLetter(word: string, searchResult: SearchResult, direction: Direction): SearchResult {
+    if (searchResult.length() == word.length) {
       throw new Error('Given word already found');
     } else {
-      
       //TODO logic like if end of grid reached in given direction (based on last match)
 
-      return match.add(new Position().set(2, 1));
+      return searchResult.add(new Position().set(2, 1));
     }
   }
 
-  searchWord(word: string, directions: Direction[]): Match {
-    const match = new Match();
-    const letters = word.split('').reverse();
-    const firstLetter = this.findFirstLetter(letters.pop());
+  searchWord(word: string, directions: Direction[], offset?: Position): SearchResult[] {
+    const searchResults: SearchResult[] = [];
+    const letters = word.toUpperCase().split('');
+    const firstLetter = this.findFirstLetter(letters.shift());
+
     if (firstLetter.exists()) {
+      const match = new SearchResult(word, directions[0]);
       match.add(firstLetter);
-    }
-    return match;
-  }
 
-  getNextCell(offset: Position, direction: Direction): Position {
-    let shiftRow = 0;
-    let shiftColumn = 0;
-
-    switch (direction) {
-      case Direction.LtR:
-        shiftRow = 0;
-        shiftColumn = 1;
-        break;
-      case Direction.RtL:
-        shiftRow = 0;
-        shiftColumn = -1;
-        break;
-      case Direction.TopDown:
-        shiftRow = 1;
-        shiftColumn = 0;
-        break;
-      case Direction.BottumUp:
-        shiftRow = -1;
-        shiftColumn = 0;
-        break;
-      case Direction.TopLBottomR:
-        shiftRow = 1;
-        shiftColumn = 1;
-        break;
-      case Direction.BottomRTopL:
-        shiftRow = -1;
-        shiftColumn = -1;
-        break;
-      case Direction.BottomLTopR:
-        shiftRow = 1;
-        shiftColumn = -1;
-        break;
-      case Direction.TopRBottomL:
-        shiftRow = -1;
-        shiftColumn = 1;
-        break;
-      default:
-        throw new Error('Unsupported direction: ' + direction);
+      directions.forEach((direction) => {
+        while (this._grid.getNextCell(match.getLatest(), direction).exists()) {
+          const cell = this._grid.getNextCell(match.getLatest(), direction);
+          if (letters.shift == this._grid[cell.row][cell.column]) {
+            match.add(cell);
+          } else {
+            break;
+          }
+        }
+      });
     }
 
-    if (
-      offset.row >= 0 &&
-      offset.row < this.gridRows &&
-      offset.row + shiftRow >= 0 &&
-      offset.row + shiftRow < this.gridRows &&
-      offset.column >= 0 &&
-      offset.column < this.gridCols &&
-      offset.column + shiftColumn >= 0 &&
-      offset.column + shiftColumn < this.gridCols
-    ) {
-      return new Position().set(offset.row + shiftRow, offset.column + shiftColumn);
-    } else {
-      return new Position();
-    }
+    console.log(searchResults);
+
+    return searchResults;
   }
 
   solve() {
-    this.wordList.forEach((word) => {
+    this._wordList.forEach((word) => {
       console.log(word);
 
       // this.searchWord(word, [Direction.LtR, Direction.TopDown]);
