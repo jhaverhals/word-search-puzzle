@@ -8,7 +8,7 @@ export class Position {
     return this;
   }
 
-  exists(): boolean {
+  isFound(): boolean {
     return this.row != undefined && this.row >= 0 && this.column != undefined && this.column >= 0 ? true : false;
   }
 }

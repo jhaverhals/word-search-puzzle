@@ -97,28 +97,22 @@ describe('findFirstLetter()', function () {
   });
 });
 
-describe('findNextLetter() left-to-right', function () {
-  const word1 = 'C';
-  const word2 = 'clear';
-  const direction = Direction.RtL;
-
-  it('all letters found', () => {
-    expect(() =>
-      puzzle5x5.findNextLetter(word1, new SearchResult(word1, direction, [new Position().set(2, 0)]), Direction.LtR)
-    ).to.throw('Given word already found');
-  });
-  it('second Letter', () => {
-    expect(
-      puzzle5x5.findNextLetter(word2, new SearchResult(word2, direction, [new Position().set(2, 0)]), direction)
-    ).to.deep.equal(new SearchResult(word2, direction, [new Position().set(2, 0), new Position().set(2, 1)]));
-  });
-});
-
 describe('searchWord()', function () {
-  it('first letter not found', () => {
-    expect(puzzle5x5.searchWord('qlear', [Direction.LtR]).some((result) => result.isFound())).to.equal(false);
+  const wordLTR = 'clear';
+
+  it('empty word provided (as empty string)', () => {
+    expect(() => puzzle5x5.searchWord('', [Direction.LtR]).length).to.throw('Word cannot be an empty string.');
   });
-  // it('word found', () => {
-  //   expect(puzzle5x5.searchWord('clear', [Direction.LtR]).some((result) => result.isFound())).to.equal(true);
-  // });
+  it('word not found - first letter does not exists in grid', () => {
+    expect(puzzle5x5.searchWord('qlear', [Direction.LtR]).length).to.equal(0);
+  });
+  it('word not found in given direction', () => {
+    expect(puzzle5x5.searchWord(wordLTR, [Direction.RtL]).length).to.equal(0);
+  });
+  it('word found - direction LTR', () => {
+    expect(puzzle5x5.searchWord(wordLTR, [Direction.LtR]).length).to.equal(1);
+    expect(puzzle5x5.searchWord(wordLTR, [Direction.LtR])[0].getLatest()).to.deep.equal(new Position().set(2,4));
+    expect(puzzle5x5.searchWord(wordLTR, [Direction.LtR])[0].getLatest()).to.not.deep.equal(new Position().set(2,3));
+  });
+
 });

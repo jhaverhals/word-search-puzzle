@@ -9,12 +9,12 @@ describe('Position functionality', function () {
     expect(new Position().set(1, 2).column).to.not.equal(1);
   });
 
-  it('exists()', () => {
-    expect(new Position().exists()).to.equal(false);
-    expect(new Position().set(1, 2).exists()).to.equal(true);
+  it('isFound()', () => {
+    expect(new Position().isFound()).to.equal(false);
+    expect(new Position().set(1, 2).isFound()).to.equal(true);
   });
-  it('exists() with zero, to guard existance (true if zero as number) checks', () => {
-    expect(new Position().set(0, 2).exists()).to.equal(true);
-    expect(new Position().set(2, 0).exists()).to.equal(true);
+  it('isFound() with zero, to guard existance (true if zero as number) checks', () => {
+    expect(new Position().set(0, 2).isFound()).to.equal(true);
+    expect(new Position().set(2, 0).isFound()).to.equal(true);
   });
 });

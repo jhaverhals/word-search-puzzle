@@ -37,7 +37,7 @@ export class WordSearchPuzzle {
     let rowOffset = 0;
     let columnOffset = 0;
 
-    if (lastHit && lastHit.exists()) {
+    if (lastHit && lastHit.isFound()) {
       const offset = this._grid.getOffset(lastHit);
       rowOffset = offset.row;
       columnOffset = offset.column;
@@ -60,39 +60,34 @@ export class WordSearchPuzzle {
     return position;
   }
 
-  findNextLetter(word: string, searchResult: SearchResult, direction: Direction): SearchResult {
-    if (searchResult.length() == word.length) {
-      throw new Error('Given word already found');
-    } else {
-      //TODO logic like if end of grid reached in given direction (based on last match)
-
-      return searchResult.add(new Position().set(2, 1));
-    }
-  }
-
   searchWord(word: string, directions: Direction[], offset?: Position): SearchResult[] {
+    if (word == '')
+      throw new Error('Word cannot be an empty string.')
+
     const searchResults: SearchResult[] = [];
     const letters = word.toUpperCase().split('');
     const firstLetter = this.findFirstLetter(letters.shift());
 
-    if (firstLetter.exists()) {
-      const match = new SearchResult(word, directions[0]);
-      match.add(firstLetter);
-
+    if (firstLetter.isFound()) {
       directions.forEach((direction) => {
-        while (this._grid.getNextCell(match.getLatest(), direction).exists()) {
-          const cell = this._grid.getNextCell(match.getLatest(), direction);
-          if (letters.shift == this._grid[cell.row][cell.column]) {
-            match.add(cell);
+        const result = new SearchResult(word, directions[0]);
+        result.add(firstLetter);
+
+        while (letters.length > 0 && this._grid.getNextCell(result.getLatest(), direction).isFound()) {
+          const cell = this._grid.getNextCell(result.getLatest(), direction);
+
+          if (letters.shift() == this._grid.getAt(cell.row, cell.column)) {
+            result.add(cell);
           } else {
             break;
           }
         }
+
+        if (result.isFound())
+          searchResults.push(result);
       });
     }
-
-    console.log(searchResults);
-
+    
     return searchResults;
   }
 
