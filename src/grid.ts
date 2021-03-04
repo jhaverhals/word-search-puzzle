@@ -1,5 +1,4 @@
 import {Direction} from './direction';
-import {SearchResult} from './search-result';
 import {Position} from './position';
 
 export class Grid {
