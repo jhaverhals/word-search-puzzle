@@ -8,3 +8,5 @@ export enum Direction {
   BottomLTopR = 'Bottom left to top right',
   TopRBottomL = 'Top right to bottom left',
 }
+
+export const ALL_DIRECTIONS = Object.values(Direction);

@@ -1,5 +1,5 @@
 import {expect} from '@esm-bundle/chai';
-import {Direction} from '../direction';
+import {ALL_DIRECTIONS, Direction} from '../direction';
 import {SearchResult} from '../search-result';
 import {Position} from '../position';
 import {WordSearchPuzzle} from '../word-search-puzzle';
@@ -109,10 +109,15 @@ describe('searchWord()', function () {
   it('word not found in given direction', () => {
     expect(puzzle5x5.searchWord(wordLTR, [Direction.RtL]).length).to.equal(0);
   });
+
   it('word found - direction LTR', () => {
     expect(puzzle5x5.searchWord(wordLTR, [Direction.LtR]).length).to.equal(1);
-    expect(puzzle5x5.searchWord(wordLTR, [Direction.LtR])[0].getLatest()).to.deep.equal(new Position().set(2,4));
-    expect(puzzle5x5.searchWord(wordLTR, [Direction.LtR])[0].getLatest()).to.not.deep.equal(new Position().set(2,3));
+    expect(puzzle5x5.searchWord(wordLTR, [Direction.LtR])[0].getLatest()).to.deep.equal(new Position().set(2, 4));
+    expect(puzzle5x5.searchWord(wordLTR, [Direction.LtR])[0].getLatest()).to.not.deep.equal(new Position().set(2, 3));
   });
-
+  it('word found - all directions', () => {
+    expect(puzzle5x5.searchWord(wordLTR, ALL_DIRECTIONS).length).to.equal(1);
+    expect(puzzle5x5.searchWord(wordLTR, ALL_DIRECTIONS)[0].getLatest()).to.deep.equal(new Position().set(2, 4));
+    expect(puzzle5x5.searchWord(wordLTR, ALL_DIRECTIONS)[0].getLatest()).to.not.deep.equal(new Position().set(2, 3));
+  });
 });

@@ -61,8 +61,7 @@ export class WordSearchPuzzle {
   }
 
   searchWord(word: string, directions: Direction[], offset?: Position): SearchResult[] {
-    if (word == '')
-      throw new Error('Word cannot be an empty string.')
+    if (word == '') throw new Error('Word cannot be an empty string.');
 
     const searchResults: SearchResult[] = [];
     const letters = word.toUpperCase().split('');
@@ -83,11 +82,10 @@ export class WordSearchPuzzle {
           }
         }
 
-        if (result.isFound())
-          searchResults.push(result);
+        if (result.isFound()) searchResults.push(result);
       });
     }
-    
+
     return searchResults;
   }
 
