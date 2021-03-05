@@ -4,16 +4,29 @@ import {Position} from './position';
 import {Grid} from './grid';
 
 export class WordSearchPuzzle {
-  private _wordList = [];
+  private _wordList = new Map();
   private _grid: Grid;
 
   addWord(newWord: string): WordSearchPuzzle {
-    this._wordList.push(newWord);
+    if (newWord.length == 0) throw new Error('Word must consists of at least 1 letter.');
+
+    newWord = newWord.toUpperCase();
+    const firstLetter = newWord.charAt(0);
+
+    if (this._wordList.has(firstLetter)) {
+      const words = this._wordList.get(firstLetter);
+      words.push(newWord);
+      this._wordList.set(firstLetter, words);
+    } else {
+      this._wordList.set(firstLetter, [newWord]);
+    }
     return this;
   }
 
   wordCount(): number {
-    return this._wordList.length;
+    let count = 0;
+    this._wordList.forEach((wordsOfCertainFirstLetter) => (count += wordsOfCertainFirstLetter.length));
+    return count;
   }
 
   createGrid(rows: number, columns: number): WordSearchPuzzle {
