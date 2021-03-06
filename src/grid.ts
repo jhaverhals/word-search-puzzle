@@ -71,6 +71,16 @@ export class Grid {
   }
 
   getNextCell(offset: Position, direction: Direction): Position {
+    const {shiftRow, shiftColumn} = this.determineRelativeCellShift(direction);
+
+    if (this.nextCellInRequestedDirectionExistsInGrid(offset, shiftRow, shiftColumn)) {
+      return new Position().set(offset.row + shiftRow, offset.column + shiftColumn);
+    } else {
+      return new Position();
+    }
+  }
+
+  private determineRelativeCellShift(direction: Direction) {
     let shiftRow = 0;
     let shiftColumn = 0;
 
@@ -110,8 +120,11 @@ export class Grid {
       default:
         throw new Error('Unsupported direction: ' + direction);
     }
+    return {shiftRow, shiftColumn};
+  }
 
-    if (
+  private nextCellInRequestedDirectionExistsInGrid(offset: Position, shiftRow: number, shiftColumn: number) {
+    return (
       offset.row >= 0 &&
       offset.row < this.rows &&
       offset.row + shiftRow >= 0 &&
@@ -120,33 +133,33 @@ export class Grid {
       offset.column < this.columns &&
       offset.column + shiftColumn >= 0 &&
       offset.column + shiftColumn < this.columns
-    ) {
-      return new Position().set(offset.row + shiftRow, offset.column + shiftColumn);
-    } else {
-      return new Position();
-    }
+    );
   }
 
   getOffset(lastHit: Position): Position {
-    if (
-      lastHit.row >= 0 &&
-      lastHit.row < this.rows &&
-      lastHit.column >= 0 &&
-      lastHit.column < this.columns &&
-      !(lastHit.row == this.rows - 1 && lastHit.column == this.columns - 1)
-    ) {
+    if (this.isWithinGridBoundaries(lastHit)) {
       let row = lastHit.row;
       let column = lastHit.column;
 
-      if (column + 1 == this.columns) {
+      if (column + 1 < this.columns) {
+        column++;
+      } else {
         column = 0;
         row++;
-      } else {
-        column++;
       }
       return new Position().set(row, column);
     } else {
       return new Position();
     }
+  }
+
+  private isWithinGridBoundaries(lastHit: Position) {
+    return (
+      lastHit.row >= 0 &&
+      lastHit.row < this.rows &&
+      lastHit.column >= 0 &&
+      lastHit.column < this.columns &&
+      !(lastHit.row == this.rows - 1 && lastHit.column == this.columns - 1)
+    );
   }
 }
