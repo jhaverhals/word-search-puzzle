@@ -3,8 +3,6 @@ import {Position} from './position';
 
 export class SearchResult {
   constructor(public searchWord: string, public direction: Direction, public letters?: Position[]) {
-    this.searchWord = searchWord;
-    this.direction = direction;
     if (letters && letters.length > 0) {
       letters.forEach((letter) => this.add(letter));
     }
