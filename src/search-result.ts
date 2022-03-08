@@ -2,11 +2,7 @@ import {Direction} from './direction';
 import {Position} from './position';
 
 export class SearchResult {
-  private searchWord: string;
-  private direction: Direction;
-  private letters: Position[];
-
-  constructor(searchWord: string, direction: Direction, letters?: Position[]) {
+  constructor(public searchWord: string, public direction: Direction, public letters?: Position[]) {
     this.searchWord = searchWord;
     this.direction = direction;
     if (letters && letters.length > 0) {
@@ -45,5 +41,9 @@ export class SearchResult {
 
   getDirection(): Direction {
     return this.direction;
+  }
+
+  getSearchWord(): string {
+    return this.searchWord;
   }
 }

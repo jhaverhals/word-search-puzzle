@@ -3,31 +3,11 @@ import {Position} from './position';
 
 export class Grid {
   private _grid = [];
-  private _rows = 0;
-  private _columns = 0;
 
-  constructor(rows: number, columns: number) {
+  constructor(public rows: number, public columns: number) {
     if (rows <= 0 || columns <= 0) {
       throw new Error('Cannot create a Grid with zero rows or columns.');
     }
-    this.rows = rows;
-    this.columns = columns;
-  }
-
-  get rows() {
-    return this._rows;
-  }
-
-  set rows(value) {
-    this._rows = value;
-  }
-
-  get columns() {
-    return this._columns;
-  }
-
-  set columns(value) {
-    this._columns = value;
   }
 
   isInitialized(): boolean {
