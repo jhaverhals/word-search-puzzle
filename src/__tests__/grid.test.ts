@@ -121,132 +121,162 @@ describe('getAt()', function () {
   });
 });
 
-describe('getNextCell()', function () {
+describe('getNextCellInDirection()', function () {
   const grid5x5 = new Grid(5, 5);
 
   it('direction: Left to Right - valid', () => {
-    expect(grid5x5.getNextCell(new Position().set(0, 0), Direction.LtR)).to.deep.equal(new Position().set(0, 1));
-    expect(grid5x5.getNextCell(new Position().set(1, 1), Direction.LtR)).to.deep.equal(new Position().set(1, 2));
+    expect(grid5x5.getNextCellInDirection(new Position().set(0, 0), Direction.LtR)).to.deep.equal(
+      new Position().set(0, 1)
+    );
+    expect(grid5x5.getNextCellInDirection(new Position().set(1, 1), Direction.LtR)).to.deep.equal(
+      new Position().set(1, 2)
+    );
   });
   it('direction: Left to Right - invalid', () => {
-    expect(grid5x5.getNextCell(new Position().set(-1, 2), Direction.LtR)).to.deep.equal(new Position());
-    expect(grid5x5.getNextCell(new Position().set(0, 4), Direction.LtR)).to.deep.equal(new Position());
-    expect(grid5x5.getNextCell(new Position().set(4, 4), Direction.LtR)).to.deep.equal(new Position());
-    expect(grid5x5.getNextCell(new Position().set(5, 4), Direction.LtR)).to.deep.equal(new Position());
+    expect(grid5x5.getNextCellInDirection(new Position().set(-1, 2), Direction.LtR)).to.deep.equal(new Position());
+    expect(grid5x5.getNextCellInDirection(new Position().set(0, 4), Direction.LtR)).to.deep.equal(new Position());
+    expect(grid5x5.getNextCellInDirection(new Position().set(4, 4), Direction.LtR)).to.deep.equal(new Position());
+    expect(grid5x5.getNextCellInDirection(new Position().set(5, 4), Direction.LtR)).to.deep.equal(new Position());
   });
 
   it('direction: Right to Left - valid', () => {
-    expect(grid5x5.getNextCell(new Position().set(0, 1), Direction.RtL)).to.deep.equal(new Position().set(0, 0));
-    expect(grid5x5.getNextCell(new Position().set(4, 4), Direction.RtL)).to.deep.equal(new Position().set(4, 3));
+    expect(grid5x5.getNextCellInDirection(new Position().set(0, 1), Direction.RtL)).to.deep.equal(
+      new Position().set(0, 0)
+    );
+    expect(grid5x5.getNextCellInDirection(new Position().set(4, 4), Direction.RtL)).to.deep.equal(
+      new Position().set(4, 3)
+    );
   });
   it('direction: Right to Left - invalid', () => {
-    expect(grid5x5.getNextCell(new Position().set(-1, 2), Direction.RtL)).to.deep.equal(new Position());
-    expect(grid5x5.getNextCell(new Position().set(0, 0), Direction.RtL)).to.deep.equal(new Position());
-    expect(grid5x5.getNextCell(new Position().set(4, 0), Direction.RtL)).to.deep.equal(new Position());
-    expect(grid5x5.getNextCell(new Position().set(5, 0), Direction.RtL)).to.deep.equal(new Position());
+    expect(grid5x5.getNextCellInDirection(new Position().set(-1, 2), Direction.RtL)).to.deep.equal(new Position());
+    expect(grid5x5.getNextCellInDirection(new Position().set(0, 0), Direction.RtL)).to.deep.equal(new Position());
+    expect(grid5x5.getNextCellInDirection(new Position().set(4, 0), Direction.RtL)).to.deep.equal(new Position());
+    expect(grid5x5.getNextCellInDirection(new Position().set(5, 0), Direction.RtL)).to.deep.equal(new Position());
   });
 
   it('direction: Top Down - valid', () => {
-    expect(grid5x5.getNextCell(new Position().set(0, 1), Direction.TopDown)).to.deep.equal(new Position().set(1, 1));
-    expect(grid5x5.getNextCell(new Position().set(3, 4), Direction.TopDown)).to.deep.equal(new Position().set(4, 4));
+    expect(grid5x5.getNextCellInDirection(new Position().set(0, 1), Direction.TopDown)).to.deep.equal(
+      new Position().set(1, 1)
+    );
+    expect(grid5x5.getNextCellInDirection(new Position().set(3, 4), Direction.TopDown)).to.deep.equal(
+      new Position().set(4, 4)
+    );
   });
   it('direction: Top Down - invalid', () => {
-    expect(grid5x5.getNextCell(new Position().set(-2, 1), Direction.TopDown)).to.deep.equal(new Position());
-    expect(grid5x5.getNextCell(new Position().set(4, 1), Direction.TopDown)).to.deep.equal(new Position());
-    expect(grid5x5.getNextCell(new Position().set(4, 4), Direction.TopDown)).to.deep.equal(new Position());
-    expect(grid5x5.getNextCell(new Position().set(5, 2), Direction.TopDown)).to.deep.equal(new Position());
+    expect(grid5x5.getNextCellInDirection(new Position().set(-2, 1), Direction.TopDown)).to.deep.equal(new Position());
+    expect(grid5x5.getNextCellInDirection(new Position().set(4, 1), Direction.TopDown)).to.deep.equal(new Position());
+    expect(grid5x5.getNextCellInDirection(new Position().set(4, 4), Direction.TopDown)).to.deep.equal(new Position());
+    expect(grid5x5.getNextCellInDirection(new Position().set(5, 2), Direction.TopDown)).to.deep.equal(new Position());
   });
 
   it('direction: Bottom Up - valid', () => {
-    expect(grid5x5.getNextCell(new Position().set(1, 2), Direction.BottumUp)).to.deep.equal(new Position().set(0, 2));
-    expect(grid5x5.getNextCell(new Position().set(3, 4), Direction.BottumUp)).to.deep.equal(new Position().set(2, 4));
+    expect(grid5x5.getNextCellInDirection(new Position().set(1, 2), Direction.BottumUp)).to.deep.equal(
+      new Position().set(0, 2)
+    );
+    expect(grid5x5.getNextCellInDirection(new Position().set(3, 4), Direction.BottumUp)).to.deep.equal(
+      new Position().set(2, 4)
+    );
   });
   it('direction: Bottom Up - invalid', () => {
-    expect(grid5x5.getNextCell(new Position().set(-2, 1), Direction.BottumUp)).to.deep.equal(new Position());
-    expect(grid5x5.getNextCell(new Position().set(0, 1), Direction.BottumUp)).to.deep.equal(new Position());
-    expect(grid5x5.getNextCell(new Position().set(5, 4), Direction.BottumUp)).to.deep.equal(new Position());
-    expect(grid5x5.getNextCell(new Position().set(5, 2), Direction.BottumUp)).to.deep.equal(new Position());
+    expect(grid5x5.getNextCellInDirection(new Position().set(-2, 1), Direction.BottumUp)).to.deep.equal(new Position());
+    expect(grid5x5.getNextCellInDirection(new Position().set(0, 1), Direction.BottumUp)).to.deep.equal(new Position());
+    expect(grid5x5.getNextCellInDirection(new Position().set(5, 4), Direction.BottumUp)).to.deep.equal(new Position());
+    expect(grid5x5.getNextCellInDirection(new Position().set(5, 2), Direction.BottumUp)).to.deep.equal(new Position());
   });
 
   it('direction: TopLeft BottomRight - valid', () => {
-    expect(grid5x5.getNextCell(new Position().set(0, 0), Direction.TopLBottomR)).to.deep.equal(
+    expect(grid5x5.getNextCellInDirection(new Position().set(0, 0), Direction.TopLBottomR)).to.deep.equal(
       new Position().set(1, 1)
     );
-    expect(grid5x5.getNextCell(new Position().set(2, 3), Direction.TopLBottomR)).to.deep.equal(
+    expect(grid5x5.getNextCellInDirection(new Position().set(2, 3), Direction.TopLBottomR)).to.deep.equal(
       new Position().set(3, 4)
     );
   });
   it('direction: TopLeft BottomRight - invalid', () => {
-    expect(grid5x5.getNextCell(new Position().set(-2, 1), Direction.TopLBottomR)).to.deep.equal(new Position());
-    expect(grid5x5.getNextCell(new Position().set(4, 1), Direction.TopLBottomR)).to.deep.equal(new Position());
-    expect(grid5x5.getNextCell(new Position().set(3, 4), Direction.TopLBottomR)).to.deep.equal(new Position());
-    expect(grid5x5.getNextCell(new Position().set(5, 2), Direction.TopLBottomR)).to.deep.equal(new Position());
+    expect(grid5x5.getNextCellInDirection(new Position().set(-2, 1), Direction.TopLBottomR)).to.deep.equal(
+      new Position()
+    );
+    expect(grid5x5.getNextCellInDirection(new Position().set(4, 1), Direction.TopLBottomR)).to.deep.equal(
+      new Position()
+    );
+    expect(grid5x5.getNextCellInDirection(new Position().set(3, 4), Direction.TopLBottomR)).to.deep.equal(
+      new Position()
+    );
+    expect(grid5x5.getNextCellInDirection(new Position().set(5, 2), Direction.TopLBottomR)).to.deep.equal(
+      new Position()
+    );
   });
 
   it('direction: BottomRight TopLeft - valid', () => {
-    expect(grid5x5.getNextCell(new Position().set(4, 4), Direction.BottomRTopL)).to.deep.equal(
+    expect(grid5x5.getNextCellInDirection(new Position().set(4, 4), Direction.BottomRTopL)).to.deep.equal(
       new Position().set(3, 3)
     );
-    expect(grid5x5.getNextCell(new Position().set(2, 3), Direction.BottomRTopL)).to.deep.equal(
+    expect(grid5x5.getNextCellInDirection(new Position().set(2, 3), Direction.BottomRTopL)).to.deep.equal(
       new Position().set(1, 2)
     );
   });
   it('direction: BottomRight TopLeft - invalid', () => {
-    expect(grid5x5.getNextCell(new Position().set(-2, 1), Direction.BottomRTopL)).to.deep.equal(new Position());
-    expect(grid5x5.getNextCell(new Position().set(0, 1), Direction.BottomRTopL)).to.deep.equal(new Position());
-    expect(grid5x5.getNextCell(new Position().set(1, 0), Direction.BottomRTopL)).to.deep.equal(new Position());
-    expect(grid5x5.getNextCell(new Position().set(5, 2), Direction.BottomRTopL)).to.deep.equal(new Position());
+    expect(grid5x5.getNextCellInDirection(new Position().set(-2, 1), Direction.BottomRTopL)).to.deep.equal(
+      new Position()
+    );
+    expect(grid5x5.getNextCellInDirection(new Position().set(0, 1), Direction.BottomRTopL)).to.deep.equal(
+      new Position()
+    );
+    expect(grid5x5.getNextCellInDirection(new Position().set(1, 0), Direction.BottomRTopL)).to.deep.equal(
+      new Position()
+    );
+    expect(grid5x5.getNextCellInDirection(new Position().set(5, 2), Direction.BottomRTopL)).to.deep.equal(
+      new Position()
+    );
   });
 
   it('direction: BottomLeft TopRight - valid', () => {
-    expect(grid5x5.getNextCell(new Position().set(0, 4), Direction.BottomLTopR)).to.deep.equal(
-      new Position().set(1, 3)
+    expect(grid5x5.getNextCellInDirection(new Position().set(1, 3), Direction.BottomLTopR)).to.deep.equal(
+      new Position().set(0, 4)
     );
-    expect(grid5x5.getNextCell(new Position().set(2, 3), Direction.BottomLTopR)).to.deep.equal(
-      new Position().set(3, 2)
+    expect(grid5x5.getNextCellInDirection(new Position().set(3, 2), Direction.BottomLTopR)).to.deep.equal(
+      new Position().set(2, 3)
     );
   });
   it('direction: BottomLeft TopRight - invalid', () => {
-    expect(grid5x5.getNextCell(new Position().set(-2, 1), Direction.BottomLTopR)).to.deep.equal(new Position());
-    expect(grid5x5.getNextCell(new Position().set(1, 0), Direction.BottomLTopR)).to.deep.equal(new Position());
-    expect(grid5x5.getNextCell(new Position().set(4, 0), Direction.BottomLTopR)).to.deep.equal(new Position());
-    expect(grid5x5.getNextCell(new Position().set(5, 2), Direction.BottomLTopR)).to.deep.equal(new Position());
+    expect(grid5x5.getNextCellInDirection(new Position().set(-2, 1), Direction.BottomLTopR)).to.deep.equal(
+      new Position()
+    );
+    expect(grid5x5.getNextCellInDirection(new Position().set(0, 1), Direction.BottomLTopR)).to.deep.equal(
+      new Position()
+    );
+    expect(grid5x5.getNextCellInDirection(new Position().set(1, 4), Direction.BottomLTopR)).to.deep.equal(
+      new Position()
+    );
+    expect(grid5x5.getNextCellInDirection(new Position().set(5, 2), Direction.BottomLTopR)).to.deep.equal(
+      new Position()
+    );
   });
 
   it('direction: TopRight BottomLeft - valid', () => {
-    expect(grid5x5.getNextCell(new Position().set(3, 2), Direction.TopRBottomL)).to.deep.equal(
-      new Position().set(2, 3)
+    expect(grid5x5.getNextCellInDirection(new Position().set(2, 3), Direction.TopRBottomL)).to.deep.equal(
+      new Position().set(3, 2)
     );
-    expect(grid5x5.getNextCell(new Position().set(4, 0), Direction.TopRBottomL)).to.deep.equal(
-      new Position().set(3, 1)
+    expect(grid5x5.getNextCellInDirection(new Position().set(0, 4), Direction.TopRBottomL)).to.deep.equal(
+      new Position().set(1, 3)
     );
   });
   it('direction: TopRight BottomLeft - invalid', () => {
-    expect(grid5x5.getNextCell(new Position().set(-2, 1), Direction.TopRBottomL)).to.deep.equal(new Position());
-    expect(grid5x5.getNextCell(new Position().set(1, 4), Direction.TopRBottomL)).to.deep.equal(new Position());
-    expect(grid5x5.getNextCell(new Position().set(4, 4), Direction.TopRBottomL)).to.deep.equal(new Position());
-    expect(grid5x5.getNextCell(new Position().set(5, 2), Direction.TopRBottomL)).to.deep.equal(new Position());
+    expect(grid5x5.getNextCellInDirection(new Position().set(-2, 1), Direction.TopRBottomL)).to.deep.equal(
+      new Position()
+    );
+    expect(grid5x5.getNextCellInDirection(new Position().set(1, 0), Direction.TopRBottomL)).to.deep.equal(
+      new Position()
+    );
+    expect(grid5x5.getNextCellInDirection(new Position().set(4, 1), Direction.TopRBottomL)).to.deep.equal(
+      new Position()
+    );
+    expect(grid5x5.getNextCellInDirection(new Position().set(5, 2), Direction.TopRBottomL)).to.deep.equal(
+      new Position()
+    );
   });
 
   it('empty offset (non-set Position) results in non-existing (non-set) Position ', () => {
-    expect(grid5x5.getNextCell(new Position(), Direction.LtR)).to.deep.equal(new Position());
-  });
-});
-
-describe('getOffset()', function () {
-  const grid5x5 = new Grid(5, 5);
-
-  it('requested offset is within grid boundaries', () => {
-    expect(grid5x5.getOffset(new Position().set(0, 0))).to.deep.equal(new Position().set(0, 1));
-    expect(grid5x5.getOffset(new Position().set(0, 0))).to.not.deep.equal(new Position().set(0, 0));
-    expect(grid5x5.getOffset(new Position().set(0, 4))).to.deep.equal(new Position().set(1, 0));
-    expect(grid5x5.getOffset(new Position().set(0, 4))).to.not.deep.equal(new Position().set(0, 5));
-    expect(grid5x5.getOffset(new Position().set(1, 4))).to.deep.equal(new Position().set(2, 0));
-  });
-  it('requested offset is invalid and/or outside grid boundaries', () => {
-    expect(grid5x5.getOffset(new Position())).to.deep.equal(new Position());
-    expect(grid5x5.getOffset(new Position().set(4, 4))).to.deep.equal(new Position());
-    expect(grid5x5.getOffset(new Position().set(4, 4))).to.not.deep.equal(new Position().set(4, 5));
-    expect(grid5x5.getOffset(new Position().set(4, 4))).to.not.deep.equal(new Position().set(5, 0));
+    expect(grid5x5.getNextCellInDirection(new Position(), Direction.LtR)).to.deep.equal(new Position());
   });
 });

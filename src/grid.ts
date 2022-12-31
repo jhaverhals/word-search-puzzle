@@ -50,7 +50,21 @@ export class Grid {
     else throw new Error('Invalid row or column provided');
   }
 
-  getNextCell(offset: Position, direction: Direction): Position {
+  getNextCell(offset: Position): Position {
+    let nextCell = this.getNextCellInDirection(offset, Direction.LtR);
+    if (!nextCell.isValid()) {
+      const {shiftRow, shiftColumn} = this.determineRelativeCellShift(Direction.TopDown);
+
+      if (this.nextCellInRequestedDirectionExistsInGrid(offset, shiftRow, shiftColumn)) {
+        nextCell = new Position().set(offset.row + shiftRow, 0);
+      } else {
+        nextCell = new Position();
+      }
+    }
+    return nextCell;
+  }
+
+  getNextCellInDirection(offset: Position, direction: Direction): Position {
     const {shiftRow, shiftColumn} = this.determineRelativeCellShift(direction);
 
     if (this.nextCellInRequestedDirectionExistsInGrid(offset, shiftRow, shiftColumn)) {
@@ -90,12 +104,12 @@ export class Grid {
         shiftColumn = -1;
         break;
       case Direction.BottomLTopR:
-        shiftRow = 1;
-        shiftColumn = -1;
-        break;
-      case Direction.TopRBottomL:
         shiftRow = -1;
         shiftColumn = 1;
+        break;
+      case Direction.TopRBottomL:
+        shiftRow = 1;
+        shiftColumn = -1;
         break;
       default:
         throw new Error('Unsupported direction: ' + direction);
@@ -116,23 +130,6 @@ export class Grid {
     );
   }
 
-  getOffset(lastHit: Position): Position {
-    if (this.isWithinGridBoundaries(lastHit)) {
-      let row = lastHit.row;
-      let column = lastHit.column;
-
-      if (column + 1 < this.columns) {
-        column++;
-      } else {
-        column = 0;
-        row++;
-      }
-      return new Position().set(row, column);
-    } else {
-      return new Position();
-    }
-  }
-
   private isWithinGridBoundaries(lastHit: Position) {
     return (
       lastHit.row >= 0 &&
@@ -141,5 +138,16 @@ export class Grid {
       lastHit.column < this.columns &&
       !(lastHit.row == this.rows - 1 && lastHit.column == this.columns - 1)
     );
+  }
+
+  getCellValues(position: Position, lookupDirection: Direction): string[] {
+    let cellValues: string[] = [];
+
+    do {
+      cellValues.push(this.getAt(position.row, position.column));
+      position = this.getNextCellInDirection(position, lookupDirection);
+    } while (position.isValid());
+
+    return cellValues;
   }
 }
