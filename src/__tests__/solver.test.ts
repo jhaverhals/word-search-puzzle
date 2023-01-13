@@ -78,12 +78,48 @@ describe('searchInCell()', function () {
   });
 });
 
-describe('solve()', function () {
-  it('Correct number of matching words + hits is returned', () => {
-    const solver = new Solver(puzzle5x5);
-    solver.solve();
+describe('puzzle 5x5', function () {
+  const solver = new Solver(puzzle5x5);
+  solver.solve();
 
+  it('Correct number of matching words + hits is returned', () => {
     expect(solver.foundWordsList.countWords()).to.equal(10);
     expect(solver.foundWordsList.countHits()).to.equal(13);
+  });
+
+  it('Findings are valid', () => {
+    expect(solver.ensureAllWordsAreFoundAtLeastOnce()).to.equal(true);
+  });
+});
+
+const puzzle8x8 = new WordSearchPuzzle().createGrid(8, 8);
+puzzle8x8
+  .addGridRow(['B', 'H', 'B', 'S', 'B', 'B', 'B', 'B'])
+  .addGridRow(['T', 'E', 'E', 'E', 'L', 'E', 'S', 'B'])
+  .addGridRow(['C', 'L', 'E', 'A', 'E', 'B', 'S', 'B'])
+  .addGridRow(['K', 'L', 'I', 'E', 'O', 'E', 'S', 'E'])
+  .addGridRow(['B', 'O', 'O', 'T', 'H', 'H', 'H', 'B'])
+  .addGridRow(['B', 'O', 'O', 'T', 'W', 'T', 'S', 'B'])
+  .addGridRow(['B', 'O', 'O', 'H', 'H', 'H', 'H', 'B'])
+  .addGridRow(['B', 'O', 'O', 'E', 'W', 'E', 'S', 'E'])
+  .addWord('bee') // top down
+  .addWord('beem') // down top
+  .addWord('boot') // left right
+  .addWord('toob') // right left
+  .addWord('the'); // all directions
+
+describe('puzzle() 8x8 with hits in all directions', function () {
+  const solver = new Solver(puzzle8x8);
+  solver.solve();
+  solver.presentFindings();
+
+  it('Correct number of matching words + hits is returned', () => {
+    expect(solver.foundWordsList.countWords()).to.equal(4);
+    expect(solver.foundWordsList.countHits()).to.equal(20);
+    expect(solver.foundWordsList.foundWords.find((result) => result.word == 'THE')?.hits.length).to.equal(9);
+  });
+
+  it('Findings are valid', () => {
+    expect(solver.ensureAllWordsAreFoundAtLeastOnce()).to.equal(false);
   });
 });

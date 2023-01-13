@@ -57,6 +57,14 @@ export class Solver {
     return matchingWords;
   }
 
+  validateFindings() {
+    if (!this.ensureAllWordsAreFoundAtLeastOnce()) throw new Error('Not all words are found.');
+  }
+
+  ensureAllWordsAreFoundAtLeastOnce(): boolean {
+    return this.foundWordsList.countWords() == this.puzzle.wordCount();
+  }
+
   presentFindings() {
     console.log('--------------------------------------------');
     console.log('Search results:');
@@ -69,7 +77,7 @@ export class Solver {
         if (word == previousWord) word = ' >';
         else previousWord = hit.word;
 
-        console.log(word.padEnd(7) + hit.position.toString().padEnd(6) + hit.direction);
+        console.log(word.padEnd(13) + hit.position.toString().padEnd(6) + hit.direction);
       });
     });
   }
