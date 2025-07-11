@@ -1,51 +1,38 @@
-import {Direction} from './direction';
-import {Position} from './position';
-
-export class SearchHit {
-  word: string;
-  position: Position;
-  direction: Direction;
-
-  constructor(word: string, position: Position, direction: Direction) {
-    this.word = word;
-    this.position = position;
-    this.direction = direction;
-  }
-}
+import {StringInGrid} from './string-in-grid'
 
 export class FoundWord {
-  word: string;
-  hits: SearchHit[] = [];
+  word: string
+  hits: StringInGrid[] = []
 
   constructor(word: string) {
-    this.word = word;
+    this.word = word
   }
 
-  addHit(hit: SearchHit): FoundWord {
-    this.hits.push(hit);
-    return this;
+  addHit(hit: StringInGrid): FoundWord {
+    this.hits.push(hit)
+    return this
   }
 }
 
 export class FoundWordsList {
-  foundWords: FoundWord[] = [];
+  foundWords: FoundWord[] = []
 
-  addHit(hit: SearchHit) {
-    const alreadyFound = this.foundWords.find((alreadyFound) => alreadyFound.word == hit.word);
+  addHit(hit: StringInGrid) {
+    const alreadyFound = this.foundWords.find((alreadyFound) => alreadyFound.word == hit.string)
     if (alreadyFound) {
-      alreadyFound.addHit(hit);
+      alreadyFound.addHit(hit)
     } else {
-      this.foundWords.push(new FoundWord(hit.word).addHit(hit));
+      this.foundWords.push(new FoundWord(hit.string).addHit(hit))
     }
   }
 
   countWords(): number {
-    return this.foundWords.length;
+    return this.foundWords.length
   }
 
   countHits(): number {
-    let counter = 0;
-    this.foundWords.forEach((word) => (counter += word.hits.length));
-    return counter;
+    let counter = 0
+    this.foundWords.forEach((word) => (counter += word.hits.length))
+    return counter
   }
 }

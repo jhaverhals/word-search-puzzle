@@ -1,84 +1,105 @@
-import {ALL_DIRECTIONS, Direction} from './direction';
-import {WordSearchPuzzle} from './word-search-puzzle';
-import {FoundWordsList, SearchHit} from './search-hit';
-import {Position} from './position';
+import { Direction } from './direction'
+import { WordSearchPuzzle } from './word-search-puzzle'
+import { FoundWordsList } from './search-hit'
+import { Position } from './position'
+import { StringInGrid } from './string-in-grid'
+import { gridSide } from './grid'
+import { LookupDirections } from './grid-lookup-directions'
 
 export class Solver {
-  puzzle: WordSearchPuzzle;
-  foundWordsList: FoundWordsList;
+  puzzle: WordSearchPuzzle
+  foundWordsList: FoundWordsList
 
   constructor(puzzle: WordSearchPuzzle) {
-    this.puzzle = puzzle;
-    this.foundWordsList = new FoundWordsList();
+    this.puzzle = puzzle
+    this.foundWordsList = new FoundWordsList()
   }
 
   solve() {
-    this.walkThroughGrid();
+    // this.searchForWords(ALL_DIRECTIONS)
+    this.validateFindings()
+    this.presentFindings()
   }
 
-  walkThroughGrid() {
-    let currentPosition = new Position().set(0, 0);
+  searchForWords(directions: Direction[]) {
+    const wordList = this.puzzle.wordList.sortByLengthDescending().toStringArray()
 
-    while (currentPosition.isValid()) {
-      this.searchInCell(currentPosition, ALL_DIRECTIONS);
-      currentPosition = this.puzzle.grid.getNextCell(currentPosition);
+    for (const side in gridSide) {
+      directions.forEach((direction) => {
+        if (LookupDirections.getDirections(gridSide[side]).includes(direction)) {
+          this.puzzle.grid.getSide(gridSide[side]).forEach((position) => {
+            let cellValues = this.puzzle.grid.getCellValuesFor(position, direction).join('')
+
+            console.log(`side: ${gridSide[side].padEnd(6)} ${direction.padEnd(25)} ${position.toString()}`)
+
+            wordList.forEach((word) => {
+              let foundPos = cellValues.indexOf(word)
+              if (foundPos >= 0) {
+                console.log(
+                  `${gridSide[side].padEnd(6)} ${direction.padEnd(25)} - ${position.row}.${position.column
+                  } - ${cellValues}`
+                )
+                let foundWord = new StringInGrid(
+                  word,
+                  this.puzzle.grid.shiftPosition(position, direction, foundPos),
+                  direction
+                )
+                this.foundWordsList.addHit(foundWord)
+
+                this.printFinding(word, position, direction, foundPos)
+              }
+            })
+          })
+        }
+      })
     }
   }
 
-  searchInCell(position: Position, directions: Direction[]) {
-    // console.log(position.toString());
+  printFinding(word: string, position: Position, direction: Direction, shiftPositionInDirection: number) {
+    const wordPositions = this.puzzle.grid.getCellPositionsFor(
+      position,
+      direction,
+      word.length,
+      shiftPositionInDirection
+    )
 
-    directions.forEach((direction) => {
-      this.searchInCellWithDirection(position, direction);
-    });
-  }
+    console.log(`_ +${' -'.repeat(this.puzzle.grid.columns)} +`)
 
-  searchInCellWithDirection(position: Position, direction: Direction) {
-    const cellValues = this.puzzle.grid.getCellValues(position, direction);
-
-    // console.log(position.toString().padEnd(5) + direction);
-
-    if (cellValues && cellValues.length > 1 && this.puzzle.wordList.has(cellValues[0])) {
-      this.searchForMatchingWords(cellValues.join('')).forEach((word) => {
-        this.foundWordsList.addHit(new SearchHit(word, position, direction));
-      });
-    }
-  }
-
-  searchForMatchingWords(cellValues: string): string[] {
-    const matchingWords: string[] = [];
-    const relevantPuzzleWords = this.puzzle.wordList.get(cellValues[0]);
-    relevantPuzzleWords.forEach((word) => {
-      if (cellValues.substring(0, word.length) == word) {
-        // console.log('FOUND !! ' + word);
-        matchingWords.push(word);
+    for (let row = 0; row < this.puzzle.grid.rows; row++) {
+      let line = `${row} |`
+      for (let col = 0; col < this.puzzle.grid.columns; col++) {
+        if (wordPositions.find((pos) => pos.row == row && pos.column == col))
+          line += ` ${this.puzzle.grid.getAt(row, col)}`
+        else line += '  '
       }
-    });
-    return matchingWords;
+      line += ' |'
+      console.log(line)
+    }
+    console.log(`_ +${' -'.repeat(this.puzzle.grid.columns)} +`)
   }
 
   validateFindings() {
-    if (!this.ensureAllWordsAreFoundAtLeastOnce()) throw new Error('Not all words are found.');
+    if (!this.ensureAllWordsAreFoundAtLeastOnce()) throw new Error('Not all words are found.')
   }
 
   ensureAllWordsAreFoundAtLeastOnce(): boolean {
-    return this.foundWordsList.countWords() == this.puzzle.wordCount();
+    return this.foundWordsList.countWords() == this.puzzle.wordCount()
   }
 
   presentFindings() {
-    console.log('--------------------------------------------');
-    console.log('Search results:');
-    console.log(this.foundWordsList.countWords() + ' words with ' + this.foundWordsList.countHits() + ' hits');
+    console.log('--------------------------------------------')
+    console.log('Search results:')
+    console.log(this.foundWordsList.countWords() + ' words with ' + this.foundWordsList.countHits() + ' hits')
 
     this.foundWordsList.foundWords.forEach((foundWord) => {
-      let previousWord = '';
+      let previousWord = ''
       foundWord.hits.forEach((hit) => {
-        let word = hit.word;
-        if (word == previousWord) word = ' >';
-        else previousWord = hit.word;
+        let word = hit.string
+        if (word == previousWord) word = ' >'
+        else previousWord = hit.string
 
-        console.log(word.padEnd(13) + hit.position.toString().padEnd(6) + hit.direction);
-      });
-    });
+        console.log(word.padEnd(13) + hit.position.toString().padEnd(6) + hit.direction)
+      })
+    })
   }
 }
